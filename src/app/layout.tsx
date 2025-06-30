@@ -14,10 +14,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'ACME',
-    template: '%s | ACME',
+    default: 'Sentinel - Security Breach Monitor',
+    template: '%s | Sentinel',
   },
-  description: 'ACME is a platform for creating and managing your projects.',
+  description:
+    'Check if your email has been compromised in data breaches, browse security incidents, and generate secure passwords.',
 }
 
 export default function RootLayout({

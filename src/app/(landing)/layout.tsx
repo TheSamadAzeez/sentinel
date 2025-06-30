@@ -4,39 +4,36 @@ import Link from 'next/link'
 
 export default function LandingLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="hello flex h-screen flex-col items-center gap-5">
-      <header className="flex w-full items-center justify-between px-10 py-5">
+    <div className="h-screen w-screen">
+      {/* <header className="sticky top-0 z-50 flex w-full items-center justify-between px-10 py-5 backdrop-blur-xs">
         <Logo variant="dark" />
+      </header> */}
 
-        <nav>
-          <ul className="flex items-center gap-4">
-            <li>
-              <Link className="text-sm font-medium hover:underline" href="/">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link className="text-sm font-medium hover:underline" href="/about">
-                About
-              </Link>
-            </li>
-          </ul>
-        </nav>
-        <Button>Get Started</Button>
-      </header>
+      <main className="h-full w-full bg-gray-200">
+        {children}
 
-      <main className="flex h-full flex-col items-center justify-center gap-5">{children}</main>
-
-      <footer className="bg-primary flex w-full items-center justify-between px-10 py-5">
-        <Logo />
-        <p className="text-white">© 2025 ACME. All rights reserved.</p>
-        <p className="text-white">
-          Built with ❤️ by{' '}
-          <a className="underline" href="https://github.com/herdeybayor">
-            herdeybayor
-          </a>
-        </p>
-      </footer>
+        {/* <footer className="border-t bg-white">
+          <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+            <div className="text-center text-sm text-gray-500">
+              <p>
+                Powered by{' '}
+                <a
+                  href="https://haveibeenpwned.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#96A4D3] hover:underline"
+                >
+                  Have I Been Pwned
+                </a>{' '}
+                API
+              </p>
+              <p className="mt-2">
+                Sentinel helps you stay informed about password security and maintain good security practices.
+              </p>
+            </div>
+          </div>
+        </footer> */}
+      </main>
     </div>
   )
 }

@@ -13,7 +13,7 @@ export function Navigation() {
     {
       label: 'Password Check',
       icon: Search,
-      href: '/',
+      href: '/password-check',
     },
     {
       label: 'Breach Database',

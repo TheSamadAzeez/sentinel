@@ -8,9 +8,70 @@ import { Badge } from '@/components/ui/badge'
 import { BreachCard } from './breach-card'
 import { getAllBreaches } from '@/actions/hibp'
 import { BreachData } from '@/types/hibp'
-import { Search, Database, Filter, Loader2 } from 'lucide-react'
+import { Search, Database, Filter, Loader2, RefreshCw } from 'lucide-react'
 import { formatNumber } from '@/utils/helpers'
 import { ScrollArea } from '@/components/ui/scroll-area'
+
+// Cache interface
+interface BreachCache {
+  data: BreachData[]
+  timestamp: number
+  hash: string
+}
+
+// Cache duration: 1 hour
+const CACHE_DURATION = 60 * 60 * 1000
+
+// Simple hash function for data comparison
+const hashData = (data: BreachData[]): string => {
+  const str = JSON.stringify(data.map((b) => ({ Name: b.Name, ModifiedDate: b.ModifiedDate })))
+  let hash = 0
+  if (str.length === 0) return hash.toString()
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i)
+    hash = (hash << 5) - hash + char
+    hash = hash & hash // Convert to 32bit integer
+  }
+  return hash.toString()
+}
+
+// Cache storage key
+const CACHE_KEY = 'breach-browser-cache'
+
+// Get cached data from localStorage
+const getCachedData = (): BreachCache | null => {
+  if (typeof window === 'undefined') return null
+  try {
+    const cached = localStorage.getItem(CACHE_KEY)
+    if (!cached) return null
+    const parsedCache: BreachCache = JSON.parse(cached)
+
+    // Check if cache is expired
+    if (Date.now() - parsedCache.timestamp > CACHE_DURATION) {
+      localStorage.removeItem(CACHE_KEY)
+      return null
+    }
+
+    return parsedCache
+  } catch {
+    return null
+  }
+}
+
+// Save data to cache
+const setCachedData = (data: BreachData[]): void => {
+  if (typeof window === 'undefined') return
+  try {
+    const cache: BreachCache = {
+      data,
+      timestamp: Date.now(),
+      hash: hashData(data),
+    }
+    localStorage.setItem(CACHE_KEY, JSON.stringify(cache))
+  } catch {
+    // Silent fail if localStorage is not available
+  }
+}
 
 export function BreachBrowser() {
   const [breaches, setBreaches] = useState<BreachData[]>([])
@@ -20,28 +81,75 @@ export function BreachBrowser() {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<'date' | 'size' | 'name'>('date')
   const [filterBy, setFilterBy] = useState<'all' | 'verified' | 'sensitive'>('all')
+  const [backgroundUpdate, setBackgroundUpdate] = useState(false)
+
+  const fetchBreaches = async (forceRefresh = false) => {
+    if (!forceRefresh && breaches.length > 0) return
+
+    setLoading(true)
+    setError('')
+
+    try {
+      // First, try to get cached data (unless forcing refresh)
+      if (!forceRefresh) {
+        const cachedData = getCachedData()
+        if (cachedData) {
+          setBreaches(cachedData.data)
+          setFilteredBreaches(cachedData.data)
+          setLoading(false)
+
+          // Still fetch fresh data in background to check for updates
+          setBackgroundUpdate(true)
+          try {
+            const result = await getAllBreaches()
+            if (result.success && result.data) {
+              const newHash = hashData(result.data)
+              // Only update if data has actually changed
+              if (newHash !== cachedData.hash) {
+                setBreaches(result.data)
+                setFilteredBreaches(result.data)
+                setCachedData(result.data)
+              }
+            }
+          } catch {
+            // If background fetch fails, keep using cached data
+          } finally {
+            setBackgroundUpdate(false)
+          }
+          return
+        }
+      }
+
+      // No cache available or forcing refresh, fetch data normally
+      const result = await getAllBreaches()
+      if (result.success && result.data) {
+        setBreaches(result.data)
+        setFilteredBreaches(result.data)
+        setCachedData(result.data)
+      } else {
+        setError(result.error || 'Failed to fetch breaches')
+      }
+    } catch (err) {
+      setError('An unexpected error occurred')
+      console.error('Fetch breaches error:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const fetchBreaches = async () => {
-      setLoading(true)
-      try {
-        const result = await getAllBreaches()
-        if (result.success && result.data) {
-          setBreaches(result.data)
-          setFilteredBreaches(result.data)
-        } else {
-          setError(result.error || 'Failed to fetch breaches')
-        }
-      } catch (err) {
-        setError('An unexpected error occurred')
-        console.error('Fetch breaches error:', err)
-      } finally {
-        setLoading(false)
-      }
-    }
-
     fetchBreaches()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Manual refresh function
+  const handleRefresh = () => {
+    // Clear cache and force refresh
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(CACHE_KEY)
+    }
+    fetchBreaches(true)
+  }
 
   useEffect(() => {
     let filtered = [...breaches]
@@ -105,7 +213,7 @@ export function BreachBrowser() {
             <p className="font-medium">Failed to Load Breach Data</p>
             <p className="text-sm">{error}</p>
           </div>
-          <Button onClick={() => window.location.reload()} className="bg-[#96A4D3] text-white hover:bg-[#96A4D3]/90">
+          <Button onClick={handleRefresh} className="bg-[#96A4D3] text-white hover:bg-[#96A4D3]/90">
             Try Again
           </Button>
         </CardContent>
@@ -115,15 +223,24 @@ export function BreachBrowser() {
 
   return (
     <div className="w-full space-y-6 lg:w-[50vw]">
-      <Card>
+      <Card className="sticky top-16 z-10">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-xl text-[#152046] lg:text-2xl">
-            <Database className="h-6 w-6 text-[#96A4D3]" />
-            Breach Database
-          </CardTitle>
-          <CardDescription>
-            Browse {formatNumber(breaches.length)} known data breaches affecting {formatNumber(totalAccounts)} accounts
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2 text-xl text-[#152046] lg:text-2xl">
+                <Database className="h-6 w-6 text-[#96A4D3]" />
+                Breach Database
+                {backgroundUpdate && <Loader2 className="h-4 w-4 animate-spin text-[#96A4D3]" />}
+              </CardTitle>
+              <CardDescription>
+                Browse {formatNumber(breaches.length)} known data breaches affecting {formatNumber(totalAccounts)}{' '}
+                accounts
+              </CardDescription>
+            </div>
+            <Button variant="outline" size="sm" onClick={handleRefresh} disabled={loading} className="shrink-0">
+              <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Search */}

@@ -66,7 +66,7 @@ export function PasswordChecker() {
   const isSecure = hasSearched && result && !result.isPwned
 
   return (
-    <div className="space-y-6">
+    <div className="w-[50vw] space-y-6">
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-2xl text-[#152046]">
@@ -199,7 +199,7 @@ export function PasswordChecker() {
 
       {hasSearched && (
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="">
             <div className="text-center text-sm text-gray-500">
               <p>
                 Password checking powered by{' '}
@@ -212,7 +212,7 @@ export function PasswordChecker() {
                   Have I Been Pwned
                 </a>
               </p>
-              <p className="mt-1">Your password is checked using k-anonymity to protect your privacy.</p>
+              <p className="">Your password is checked using k-anonymity to protect your privacy.</p>
             </div>
           </CardContent>
         </Card>

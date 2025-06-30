@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
-import Image from 'next/image'
+import { Shield } from 'lucide-react'
 
 interface LogoProps {
   className?: string
@@ -11,14 +11,11 @@ interface LogoProps {
 
 export function Logo({ className, containerClassName, variant = 'light' }: LogoProps) {
   return (
-    <Link href="/" aria-label="ACME" className={cn('inline-block', containerClassName)}>
-      <Image
-        src="/images/logo.png"
-        width={104}
-        height={57}
-        alt="ACME logo"
-        className={cn(variant === 'light' ? 'invert' : '', className)}
-      />
+    <Link href="/" aria-label="Sentinel" className={cn('inline-block', containerClassName)}>
+      <div className={cn('flex items-center gap-2', className)}>
+        <Shield className={cn('h-8 w-8', variant === 'light' ? 'text-[#96A4D3]' : 'text-[#152046]')} />
+        <span className={cn('text-xl font-bold', variant === 'light' ? 'text-white' : 'text-[#152046]')}>Sentinel</span>
+      </div>
     </Link>
   )
 }

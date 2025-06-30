@@ -43,9 +43,9 @@ export function PasswordGenerator() {
   const strength = password ? getPasswordStrength(password) : null
 
   return (
-    <Card className="w-[50vw]">
+    <Card className="w-full lg:w-[50vw]">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-2xl text-[#152046]">
+        <CardTitle className="flex items-center gap-2 text-xl text-[#152046] lg:text-2xl">
           <Key className="h-6 w-6 text-[#96A4D3]" />
           Password Generator
         </CardTitle>

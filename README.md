@@ -2,16 +2,35 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+### 1. Environment Setup
+
+First, copy the environment variables template and configure your API keys:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+cp .env.example .env.local
+```
+
+Then edit `.env.local` and add your Have I Been Pwned API key:
+
+```bash
+HIBP_API_KEY=your_actual_api_key_here
+```
+
+**Getting a Have I Been Pwned API Key:**
+1. Visit [https://haveibeenpwned.com/API/Key](https://haveibeenpwned.com/API/Key)
+2. Purchase an API key (required for accessing breach data)
+3. Copy the key and paste it into your `.env.local` file
+
+### 2. Install Dependencies
+
+```bash
+pnpm install
+```
+
+### 3. Run the Development Server
+
+```bash
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

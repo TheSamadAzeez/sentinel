@@ -5,7 +5,7 @@ export default function LandingLayout({ children }: { children: React.ReactNode 
     <div className="h-screen w-screen">
       <Navigation />
 
-      <main className="mx-auto flex h-full w-fit bg-gray-200">{children}</main>
+      <main className="mx-auto flex h-fit w-fit bg-gray-200">{children}</main>
     </div>
   )
 }

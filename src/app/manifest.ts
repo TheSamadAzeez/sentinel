@@ -2,9 +2,9 @@ import { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'ACME',
-    short_name: 'ACME',
-    description: 'ACME is a platform for creating and managing your projects.',
+    name: 'Sentinel',
+    short_name: 'Sentinel',
+    description: 'Security Breach Monitor',
     start_url: '/',
     display: 'standalone',
     background_color: '#FFFFFF',

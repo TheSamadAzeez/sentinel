@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     template: '%s | Sentinel',
   },
   description:
-    'Check if your email has been compromised in data breaches, browse security incidents, and generate secure passwords.',
+    'Check if your password has been compromised in data breaches, browse security incidents, and generate secure passwords.',
 }
 
 export default function RootLayout({
@@ -28,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable} bg-gray-200 antialiased`}>{children}</body>
     </html>
   )
 }

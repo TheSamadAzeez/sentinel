@@ -65,14 +65,14 @@ export function Navigation() {
               <SheetTrigger>
                 <Menu className="h-6 w-6" />
               </SheetTrigger>
-              <SheetContent side="right">
+              <SheetContent side="right" className="bg-gray-200">
                 <div className="flex flex-col gap-3 px-5 pt-20">
                   {LINKS.map((link) => {
                     return (
                       <Link key={link.label} href={link.href}>
                         <p
                           className={`text-xl font-bold hover:text-gray-100 ${
-                            pathname === link.href ? `text-blue` : `text-black`
+                            pathname === link.href ? `text-[#17234b]` : `text-gray-600`
                           }`}
                         >
                           {link.label}

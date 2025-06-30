@@ -1,15 +1,18 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Shield, Search, Database, Key, Menu, X } from 'lucide-react'
 
 interface NavigationProps {
-  activeTab: string
-  onTabChange: (tab: string) => void
+  activeTab?: string
+  onTabChange?: (tab: string) => void
 }
 
-export function Navigation({ activeTab, onTabChange }: NavigationProps) {
+export function Navigation(_props: NavigationProps) {
+  const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const tabs = [
@@ -17,16 +20,19 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
       id: 'password-check',
       label: 'Password Check',
       icon: Search,
+      href: '/',
     },
     {
       id: 'breach-browser',
       label: 'Breach Database',
       icon: Database,
+      href: '/breach',
     },
     {
       id: 'password-generator',
       label: 'Password Generator',
       icon: Key,
+      href: '/generator',
     },
   ]
 
@@ -35,29 +41,30 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
             <Shield className="h-8 w-8 text-[#96A4D3]" />
             <h1 className="text-2xl font-bold">Sentinel</h1>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden items-center space-x-4 md:flex">
             {tabs.map((tab) => {
               const Icon = tab.icon
+
               return (
-                <Button
-                  key={tab.id}
-                  variant={activeTab === tab.id ? 'default' : 'ghost'}
-                  onClick={() => onTabChange(tab.id)}
-                  className={
-                    activeTab === tab.id
-                      ? 'bg-[#96A4D3] text-white hover:bg-[#96A4D3]/90'
-                      : 'text-white hover:bg-white/10'
-                  }
-                >
-                  <Icon className="mr-2 h-4 w-4" />
-                  {tab.label}
-                </Button>
+                <Link key={tab.id} href={tab.href}>
+                  <Button
+                    variant={pathname == tab.href ? 'default' : 'ghost'}
+                    className={
+                      pathname == tab.href
+                        ? 'bg-[#96A4D3] text-white hover:bg-[#96A4D3]/90'
+                        : 'text-white hover:bg-white/10'
+                    }
+                  >
+                    <Icon className="mr-2 h-4 w-4" />
+                    {tab.label}
+                  </Button>
+                </Link>
               )
             })}
           </div>
@@ -83,22 +90,20 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
             {tabs.map((tab) => {
               const Icon = tab.icon
               return (
-                <Button
-                  key={tab.id}
-                  variant={activeTab === tab.id ? 'default' : 'ghost'}
-                  onClick={() => {
-                    onTabChange(tab.id)
-                    setIsMobileMenuOpen(false)
-                  }}
-                  className={`w-full justify-start ${
-                    activeTab === tab.id
-                      ? 'bg-[#96A4D3] text-white hover:bg-[#96A4D3]/90'
-                      : 'text-white hover:bg-white/10'
-                  }`}
-                >
-                  <Icon className="mr-2 h-4 w-4" />
-                  {tab.label}
-                </Button>
+                <Link key={tab.id} href={tab.href}>
+                  <Button
+                    variant={pathname === tab.href ? 'default' : 'ghost'}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`w-full justify-start ${
+                      pathname === tab.href
+                        ? 'bg-[#96A4D3] text-white hover:bg-[#96A4D3]/90'
+                        : 'text-white hover:bg-white/10'
+                    }`}
+                  >
+                    <Icon className="mr-2 h-4 w-4" />
+                    {tab.label}
+                  </Button>
+                </Link>
               )
             })}
           </div>

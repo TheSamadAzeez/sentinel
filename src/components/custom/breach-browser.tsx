@@ -85,7 +85,7 @@ export function BreachBrowser() {
 
   if (loading) {
     return (
-      <Card className="w-[50vw]">
+      <Card className="w-full lg:w-[50vw]">
         <CardContent className="flex items-center justify-center py-12">
           <div className="flex items-center gap-2 text-[#152046]">
             <Loader2 className="h-6 w-6 animate-spin" />
@@ -98,7 +98,7 @@ export function BreachBrowser() {
 
   if (error) {
     return (
-      <Card className="w-[50vw]">
+      <Card className="w-full lg:w-[50vw]">
         <CardContent className="py-12 text-center">
           <div className="mb-4 text-red-600">
             <Database className="mx-auto mb-2 h-12 w-12" />
@@ -114,10 +114,10 @@ export function BreachBrowser() {
   }
 
   return (
-    <div className="w-[50vw] space-y-6">
+    <div className="w-full space-y-6 lg:w-[50vw]">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-2xl text-[#152046]">
+          <CardTitle className="flex items-center gap-2 text-xl text-[#152046] lg:text-2xl">
             <Database className="h-6 w-6 text-[#96A4D3]" />
             Breach Database
           </CardTitle>
@@ -225,7 +225,7 @@ export function BreachBrowser() {
           </CardContent>
         </Card>
       ) : (
-        <ScrollArea className="h-[calc(100vh-500px)]">
+        <ScrollArea className="h-full lg:h-[calc(100vh-500px)]">
           <div className="grid gap-4">
             {filteredBreaches.map((breach) => (
               <BreachCard key={breach.Name} breach={breach} compact />

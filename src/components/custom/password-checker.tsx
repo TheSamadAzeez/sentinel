@@ -66,10 +66,10 @@ export function PasswordChecker() {
   const isSecure = hasSearched && result && !result.isPwned
 
   return (
-    <div className="w-[50vw] space-y-6">
+    <div className="w-full space-y-6 lg:w-[50vw]">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-2xl text-[#152046]">
+          <CardTitle className="flex items-center gap-2 text-xl text-[#152046] lg:text-2xl">
             <Search className="h-6 w-6 text-[#96A4D3]" />
             Check Password Security
           </CardTitle>

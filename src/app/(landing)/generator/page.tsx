@@ -1,4 +1,10 @@
 import { PasswordGenerator } from '@/components/custom/password-generator'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Secure Password Generator',
+  description: 'Generate strong, secure passwords with customizable options for maximum security.',
+}
 
 export default function PasswordGeneratorPage() {
   return (

@@ -1,4 +1,10 @@
 import { BreachBrowser } from '@/components/custom/breach-browser'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Data Breach Database',
+  description: 'Explore a comprehensive database of known security breaches and incidents.',
+}
 
 export default function BreachDatabasePage() {
   return (

@@ -1,4 +1,10 @@
 import { PasswordChecker } from '@/components/custom/password-checker'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Password Security Check',
+  description: 'Check if your password has been compromised in known data breaches.',
+}
 
 export default function Home() {
   return (

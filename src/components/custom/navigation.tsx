@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Database, Key, Menu, Search, Shield } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from '../ui/sheet'
 
 export function Navigation() {
   const pathname = usePathname()
@@ -69,15 +69,17 @@ export function Navigation() {
                 <div className="flex flex-col gap-3 px-5 pt-20">
                   {LINKS.map((link) => {
                     return (
-                      <Link key={link.label} href={link.href}>
-                        <p
-                          className={`text-xl font-bold hover:text-gray-100 ${
-                            pathname === link.href ? `text-[#17234b]` : `text-gray-600`
-                          }`}
-                        >
-                          {link.label}
-                        </p>
-                      </Link>
+                      <SheetClose asChild key={link.label}>
+                        <Link href={link.href}>
+                          <p
+                            className={`text-xl font-bold hover:text-gray-100 ${
+                              pathname === link.href ? `text-[#17234b]` : `text-gray-600`
+                            }`}
+                          >
+                            {link.label}
+                          </p>
+                        </Link>
+                      </SheetClose>
                     )
                   })}
                 </div>
